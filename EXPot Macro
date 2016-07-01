@@ -1,0 +1,19 @@
+clearjournal
+cleartargetqueue
+usetype! '0xf0d'
+waitfortarget 1500
+canceltarget
+//
+waitforjournal '2' 4000
+pause 600 // <<< SET BASED ON YOUR PING
+usetype! '0xf0d'
+waitfortarget 1500
+//
+if not @inrange 'last' 12
+  headmsg 'Range > 12' 25
+  targettileoffset (0 3 0)
+  stop
+endif
+//
+target! 'last'
+targettileoffset (0 3 0)

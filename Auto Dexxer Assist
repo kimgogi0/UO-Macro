@@ -1,6 +1,128 @@
 //May need to adjust str/dex triggers based on your particular stats
 
 
+//create timers
+
+if not timerexists 'healpot'
+
+createtimer 'healpot'
+
+settimer 'healpot' 11000
+
+endif
+
+if not timerexists 'bandage'
+
+createtimer 'bandage'
+
+settimer 'bandage' 20000
+
+endif
+
+if not timerexists 'trappouch'
+
+createtimer 'trappouch'
+
+settimer 'trappouch' 3000
+
+endif
+
+if not timerexists 'strpot'
+
+createtimer 'strpot'
+
+settimer 'strpot' 120000
+
+endif
+
+if not timerexists 'dexpot'
+
+createtimer 'dexpot'
+
+settimer 'dexpot' 120000
+
+endif
+
+//auto trap pouch if paralyzed
+
+if paralyzed 'self'
+
+pause 200
+
+playmacro 'trappouch'
+
+endif
+
+//auto cure pot
+
+if hits < 25 and @findobject 'lefthand'
+
+if poisoned 'self' and @findtype '0xf07' 'any' 'backpack'
+
+clearhands 'left'
+
+pause 600
+
+endif
+
+endif
+
+while poisoned 'self' and not @findobject 'lefthand'
+
+if @findtype '0xf07' 'any' 'backpack' and hits < 75
+
+pause 200
+
+useobject! 'found'
+
+pause 250
+
+else
+
+break
+
+endif
+
+endwhile
+
+//auto heal pot
+
+if not poisoned 'self' and hits < 25
+
+if timer 'healpot' >= 10250 and @findtype '0xf0c' 'any' 'backpack'
+
+if @findobject 'lefthand'
+
+clearhands 'left'
+
+pause 600
+
+endif
+
+endif
+
+endif
+
+if not poisoned 'self' and hits < 50
+
+if timer 'healpot' >= 10250 and @findtype '0xf0c' 'any' 'backpack'
+
+if not @findobject 'lefthand'
+
+pause 200
+
+usetype! '0xf0c'
+
+settimer 'healpot' 0
+
+pause 250
+
+endif
+
+endif
+
+endif
+
 //auto strength pot
 
 if diffhits > 10 and timer 'strpot' > 120000
@@ -98,4 +220,3 @@ endif
 endif
 
 endif
-

@@ -1,0 +1,22 @@
+if diffhits == 0 and not poisoned
+  headmsg 'No heal needed'
+elseif not @injournal! 'You begin applying the bandages' 'system'
+  @bandageself!
+elseif @injournal! 'You finish applying the bandages' 'system'
+  @clearjournal!
+  @bandageself!
+elseif @injournal! 'You apply the bandages, but they barely help' 'system'
+  @clearjournal!
+  @bandageself!
+elseif @injournal! 'You heal what little damage your patient had' 'system'
+  @clearjournal!
+  @bandageself!
+elseif @injournal! 'That being is not damaged' 'system'
+  @clearjournal!
+  @bandageself!
+else
+  //  @headmsg! 'Prior Bandage running'
+endif
+//@cancelautotarget
+//@canceltarget
+pause 250

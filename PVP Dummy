@@ -1,0 +1,394 @@
+//BANDAGE, PROTECTION, STR POT, CURE POT, EARLY HEAL POT, CAST SMALL HEAL
+
+//
+
+//create dummy timer
+
+@canceltarget
+
+if not timerexists 'dummy'
+
+createtimer 'dummy'
+
+settimer 'dummy' '999999'
+
+endif
+
+//create healpot timer
+
+if not timerexists 'healpot'
+
+createtimer 'healpot'
+
+settimer 'healpot' '999999'
+
+endif
+
+//create protection timer
+
+if not timerexists 'ProtTimer'
+
+createtimer 'ProtTimer'
+
+settimer 'ProtTimer' '999999'
+
+endif
+
+//create str pot timer
+
+if not timerexists 'StrTimer'
+
+createtimer 'StrTimer'
+
+settimer 'StrTimer' '999999'
+
+endif
+
+//create trap pouch timer
+
+if not timerexists 'TrapPouchTimer'
+
+createtimer 'TrapPouchTimer'
+
+settimer 'TrapPouchTimer' '999999'
+
+endif
+
+//create bandage timer
+
+if not timerexists 'bandage'
+
+createtimer 'bandage'
+
+settimer 'bandage' '999999'
+
+endif
+
+//
+
+//
+
+//setup stun
+
+@setability 'stun' 'on'
+
+pause 50
+
+//
+
+//trap pouch if paralyzed
+
+//if paralyzed 'self' and timer 'TrapPouchTimer' > 3000
+
+//msg '[pouch'
+
+// pause 100
+
+// settimer 'TrapPouchTimer' 0
+
+//endif
+
+//
+
+//cure pot any time poisoned
+
+if poisoned 'self'
+
+@usetype '0xf07' 'any' 'backpack'
+
+pause 100
+
+endif
+
+//
+
+//As long as not poisoned
+
+while not poisoned 'self' and not paralyzed 'self'
+
+//Bandage is needed
+
+if diffhits > 0 and not poisoned
+
+if timer 'bandage' > 14000
+
+bandageself
+
+settimer 'bandage' 0
+
+endif
+
+endif
+
+//
+
+//cast protection on self
+
+if timer 'prottimer' > 250000 and diffhits < 5
+
+@clearjournal
+
+cast 'protection' 'self'
+
+pause 100
+
+if not @injournal 'disturbed' 'system'
+
+settimer 'ProtTimer' 0
+
+endif
+
+endif
+
+//
+
+//auto heal pot
+
+if hits < 62
+
+if timer 'healpot' > 10500
+
+pause 100
+
+usetype '0xf0c'
+
+settimer 'healpot' 0
+
+pause 100
+
+endif
+
+endif
+
+//
+
+//mini heal at high hp and low hp, big heal in middle
+
+if diffhits > 5
+
+if diffhits < 30 or hits < 67
+
+cast 'heal' 'self'
+
+pause 100
+
+else
+
+cast 'greater heal' 'self'
+
+pause 100
+
+endif
+
+endif
+
+//
+
+//auto strength pot
+
+if not targetexists and diffhits < 5
+
+if str < 101
+
+if @counttype '0xf09' 'all' 'backpack' > 0
+
+usetype! '0xf09'
+
+pause 100
+
+elseif mana > 70
+
+cast 'strength' 'self'
+
+pause 150
+
+endif
+
+endif
+
+endif
+
+//
+
+//auto dex pot
+
+if not targetexists and diffhits < 5
+
+if dex < 41
+
+if @counttype '0xf08' 'all' 'backpack' > 0
+
+usetype! '0xf08'
+
+pause 100
+
+elseif mana > 70
+
+cast 'agility' 'self'
+
+pause 150
+
+endif
+
+endif
+
+endif
+
+//
+
+//meditate if needed
+
+if mana < 50 and diffhits < 6
+
+useskill 'meditation'
+
+pause 100
+
+replay
+
+endif
+
+//
+
+//get bandages running
+
+if diffhits < 6 and timer 'bandage' > 14000
+
+msg '[pouch'
+
+pause 600
+
+@bandageself
+
+settimer 'bandage' 0
+
+pause 100
+
+endif
+
+//
+
+//pre-load GH
+
+if diffhits < 6
+
+pause 50
+
+cast 'greater heal'
+
+waitfortarget '2000'
+
+endif
+
+while targetexists and diffhits < 15
+
+if timer 'dummy' > 5000
+
+// msg 'Heal Dummy (Lvl 10) Idle'
+
+settimer 'dummy' 0
+
+endif
+
+if poisoned 'self'
+
+replay
+
+endif
+
+if str < 101 or dex < 41
+
+replay
+
+endif
+
+if @injournal 'You successfully stun' 'system'
+
+@setability 'stun' 'off'
+
+pause 50
+
+@setability 'stun' 'on'
+
+pause 50
+
+@clearjournal
+
+replay
+
+endif
+
+pause 100
+
+endwhile
+
+//
+
+//Duplicate prior to avoid anti-autoheal code
+
+pause 100
+
+while targetexists and diffhits < 15
+
+if poisoned 'self'
+
+replay
+
+endif
+
+if str < 101 or dex < 41
+
+replay
+
+endif
+
+if @injournal 'You successfully stun' 'system'
+
+@setability 'stun' 'off'
+
+pause 50
+
+@setability 'stun' 'on'
+
+pause 50
+
+@clearjournal
+
+replay
+
+endif
+
+endwhile
+
+target! 'self'
+
+pause 100
+
+//
+
+//keep stun on
+
+if stam < 25
+
+@usetype '0xf0b'
+
+pause 100
+
+endif
+
+if @injournal 'You successfully stun' 'system'
+
+@setability 'stun' 'off'
+
+pause 50
+
+@setability 'stun' 'on'
+
+pause 50
+
+@clearjournal
+
+endif
+
+endwhile
+

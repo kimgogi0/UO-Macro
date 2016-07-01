@@ -1,0 +1,101 @@
+//May need to adjust str/dex triggers based on your particular stats
+
+
+//auto strength pot
+
+if diffhits > 10 and timer 'strpot' > 120000
+
+if not @findobject 'lefthand' and @findtype '0xf09' 'any' 'backpack'
+
+pause 200
+
+useobject! 'found'
+
+settimer 'strpot' 0
+
+pause 250
+
+endif
+
+endif
+
+//auto dexterity pot
+
+if diffhits > 10 and timer 'dexpot' > 120000
+
+if not @findobject 'lefthand' and @findtype '0xf08' 'any' 'backpack'
+
+pause 200
+
+useobject! 'found'
+
+settimer 'dexpot' 0
+
+pause 250
+
+endif
+
+endif
+
+//auto stam pot
+
+if diffhits > 1 and stam < 2
+
+if @findtype '0xf0b' 'any' 'backpack'
+
+if @findobject 'lefthand'
+
+clearhands 'left'
+
+pause 800
+
+endif
+
+usetype! '0xf0b'
+
+pause 250
+
+endif
+
+endif
+
+if diffhits > 1
+
+if stam < 60 and not @findobject 'lefthand'
+
+if @findtype '0xf0b' 'any' 'backpack'
+
+useobject! 'found'
+
+pause 250
+
+endif
+
+endif
+
+endif
+
+//auto bandage
+
+if timer 'bandage' > 16000 and skill 'healing' > 50
+
+if diffhits > 0 or poisoned 'self'
+
+pause 200
+
+@bandageself
+
+if poisoned 'self'
+
+settimer 'bandage' 3000
+
+else
+
+settimer 'bandage' 5000
+
+endif
+
+endif
+
+endif
+

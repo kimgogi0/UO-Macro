@@ -1,3 +1,8 @@
+//Best if used as hotkey, remove the beginning headmsg if put on loop.
+//referenced by my dexxer and healbot macros.
+//If you use allnames around tons of mobs/players,
+//it can scroll off the relevant journal messages and cause your bandage to interrupt itself.
+
 if diffhits == 0 and not poisoned
   headmsg 'No heal needed'
 elseif not @injournal! 'You begin applying the bandages' 'system'
